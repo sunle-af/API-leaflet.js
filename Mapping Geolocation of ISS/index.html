@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!--leaflet.js-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+   <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+ integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+ crossorigin="">
+
+</script>
+<style> #mapid { height: 500px; }</style>
+       
+    </head>
+    <body>
+        <p id="lat"></p>
+        <p id="long"></p>
+
+        <div id="mapid"></div>
+        <script>
+            //Making a map and tiles
+            const mymap = L.map('mapid').setView([0, 0], 1);
+            const attribution = '&copy; <a href ="https://www.openstreetmap.org/copyright">OpenStreetMap</a contributers>';
+            const tileURL ='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            const tiles = L.tileLayer(tileURL, {attribution}); 
+            tiles.addTo(mymap);
+            //Making a marker with an icon
+           
+            const issIcon = L.icon({
+                  iconUrl: 'logo.png',
+                   iconSize:     [50, 32], // size of the icon
+                iconAnchor:   [25, 16], // point of the icon which will correspond to marker's location
+    
+}); 
+            const marker =L.marker([0, 0], {icon: issIcon}).addTo(mymap);
+            
+            const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
+            async function getISS(){
+                const response = await fetch(api_url);
+                const data = await response.json();
+                const {latitude, longitude} =data;
+//L.marker({latitude, longitude}).addTo(mymap);
+                marker.setLatLng([latitude,longitude])
+               // document.getElementById('lat').textContent = latitude;
+               // document.getElementById('long').textContent = longitude;
+                
+                console.log(data);
+
+            }
+            getISS();
+
+
+        </script>
+            
+    </body>
+</html>
